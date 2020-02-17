@@ -22,14 +22,10 @@ class QuoteSpider(scrapy.Spider):
 			items['author'] = author
 			items['tag'] = tag
 
-			#yield{
-			#	'title': title,
-			#	'author': author,
-			#	'tag': tag
-			#}
-			#alternative
 			yield items
 
-		#this is for simple titile textb extraction
-		#title = response.css('title::text').extract()
-		#yield{'titletext':title}
+		next_page = response.css('li.next a::attr(href)').get()
+
+		if next_page is not None:
+			yield response.follow(next_page, callback=self.parse)
+
